@@ -1,0 +1,7 @@
+Use case: stylized-concept
+Asset type: monster sprite pack for a browser canvas game
+Primary request: Create a 3 by 3 sprite pack of small roaming campus monsters for a retro 16-bit top-down JRPG university exploration game. The monsters should be cute but clearly dangerous: slime-like lab blob, tiny book imp, glowing science wisp, little vial creature, mask spirit, and similar compact fantasy-science creatures. Do not copy any existing franchise or named artist; evoke an early-1990s Japanese console RPG feeling.
+Style/medium: crisp retro pixel art, 16-bit console RPG, top-down three-quarter small enemy sprites, readable at 32x32 pixels, charming silhouettes, saturated balanced palette.
+Composition/framing: exact 3 columns by 3 rows grid of equal cells. One centered monster per cell, consistent scale, full body inside central 65% safe area, generous padding.
+Background: perfectly flat solid #FF00FF chroma-key background across the whole sheet.
+Constraints: no UI, no labels, no text, no watermark. No sprite touches cell edges. No cast shadows outside the sprites.

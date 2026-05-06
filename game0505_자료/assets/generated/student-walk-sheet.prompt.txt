@@ -1,0 +1,7 @@
+Use case: stylized-concept
+Asset type: top-down player sprite sheet for a browser canvas game
+Primary request: Create a 4 by 4 sprite sheet for one charming student explorer character in a retro 16-bit top-down JRPG campus exploration game. The character wears a blue school jacket, small backpack, dark pants, and has a warm readable silhouette. Do not copy any existing franchise or named artist; evoke an early-1990s Japanese console RPG feeling.
+Style/medium: crisp retro pixel art, 16-bit console RPG, top-down three-quarter character sprites, strong silhouette, limited palette, hand-placed pixels.
+Composition/framing: exact 4 columns by 4 rows grid. Row 1: walking down frames. Row 2: walking left frames. Row 3: walking right frames. Row 4: walking up frames. The same character identity and scale in every cell. Full body centered in the central 65% safe area of each cell, stable feet anchor line, generous padding.
+Background: perfectly flat solid #FF00FF chroma-key background across the whole sheet.
+Constraints: no UI, no labels, no text, no watermark. No limbs, bag, hair, or feet crossing cell edges. No shadows outside the sprite. Keep the sprite readable at 32x32 pixels.

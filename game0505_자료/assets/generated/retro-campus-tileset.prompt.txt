@@ -1,0 +1,6 @@
+Use case: stylized-concept
+Asset type: 2D game tileset for a browser canvas game
+Primary request: Create a 4 by 4 retro 16-bit top-down JRPG tileset for a small Korean medical science university campus exploration game. Do not copy any existing franchise or named artist; evoke the warm early-1990s Japanese console RPG feeling with charming, readable pixel art.
+Style/medium: crisp retro pixel art, 16-bit console RPG, top-down three-quarter tiles, saturated but balanced colors, hand-placed pixel clusters, clean silhouettes.
+Composition/framing: exact 4x4 grid of equal square tiles, each tile centered and fully contained. Tiles should be: grass, darker grass edge, tan brick path, road asphalt with lane mark, blue academic building wall, blue building roof, window tile, campus gate/door, tree top, tree trunk, hedge, flower patch, sign board without text, small medical science prop, shadow/edge tile, campus plaza tile.
+Constraints: no UI, no labels, no readable text, no watermark. Keep tile edges clean and repeatable where appropriate. Avoid photorealism, gradients, overly smooth vector art, and modern mobile game gloss.
