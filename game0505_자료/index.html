@@ -254,6 +254,93 @@
       .timer { font-size: 16px; }
     }
 
+    html.touch-device,
+    html.touch-device body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      overscroll-behavior: none;
+    }
+
+    html.touch-device body {
+      display: block;
+      min-height: 100dvh;
+      padding: 0;
+      background: #050706;
+      touch-action: none;
+    }
+
+    html.touch-device .screen-panel {
+      width: 100vw;
+      height: 100dvh;
+      padding: 0;
+      border: 0;
+      box-shadow: none;
+      background: #050706;
+    }
+
+    html.touch-device .topbar,
+    html.touch-device .status-row {
+      display: none;
+    }
+
+    html.touch-device .stage {
+      width: 100vw;
+      height: 100dvh;
+      max-width: none;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    html.touch-device.landscape-runtime canvas {
+      width: 100vw;
+      height: 100dvh;
+      border: 0;
+      aspect-ratio: auto;
+    }
+
+    html.touch-device .overlay {
+      inset: max(8px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) auto max(8px, env(safe-area-inset-left));
+    }
+
+    html.touch-device .inventory,
+    html.touch-device .timer {
+      min-height: 38px;
+      padding: 6px 9px;
+      font-size: 16px;
+    }
+
+    html.touch-device .timer {
+      font-size: 18px;
+    }
+
+    html.touch-device .modal-overlay {
+      position: fixed;
+      padding: 16px max(16px, env(safe-area-inset-right)) 16px max(16px, env(safe-area-inset-left));
+    }
+
+    html.touch-device .modal-panel {
+      width: min(620px, 86vw);
+      padding: 14px;
+    }
+
+    html.touch-device .modal-panel p {
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    html.touch-device .mobile-controls {
+      display: block;
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    html.touch-device.portrait-runtime .orientation-overlay {
+      display: grid;
+    }
+
     @media (hover: none) and (pointer: coarse) and (orientation: landscape) {
       html,
       body {

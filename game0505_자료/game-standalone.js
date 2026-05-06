@@ -510,6 +510,7 @@ const canvas = document.querySelector('#gameCanvas');
 const ctx = canvas.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 
+const rootEl = document.documentElement;
 const messageEl = document.querySelector('#message');
 const waterCountEl = document.querySelector('#waterCount');
 const tunaCountEl = document.querySelector('#tunaCount');
@@ -599,6 +600,7 @@ function startGame() {
   lastTime = performance.now();
   hideStartOverlay();
   hideScoreOverlay();
+  requestMobileLandscapeMode();
 }
 
 function showStartOverlay() {
@@ -857,7 +859,8 @@ function clamp(value, min, max) {
 }
 
 function resizeCanvasForViewport() {
-  const mobileLandscape = isMobileLandscapeViewport();
+  syncViewportModeClasses();
+  const mobileLandscape = isTouchViewport() && window.innerWidth >= window.innerHeight;
   const nextWidth = mobileLandscape ? Math.floor(window.innerWidth) : DEFAULT_CANVAS_WIDTH;
   const nextHeight = mobileLandscape ? Math.floor(window.innerHeight) : DEFAULT_CANVAS_HEIGHT;
 
@@ -871,8 +874,41 @@ function resizeCanvasForViewport() {
   render();
 }
 
-function isMobileLandscapeViewport() {
-  return window.matchMedia('(hover: none) and (pointer: coarse) and (orientation: landscape)').matches;
+function isTouchViewport() {
+  return navigator.maxTouchPoints > 0
+    || 'ontouchstart' in window
+    || window.matchMedia('(pointer: coarse)').matches;
+}
+
+function syncViewportModeClasses() {
+  const touch = isTouchViewport();
+  const landscape = window.innerWidth >= window.innerHeight;
+
+  rootEl.classList.toggle('touch-device', touch);
+  rootEl.classList.toggle('landscape-runtime', touch && landscape);
+  rootEl.classList.toggle('portrait-runtime', touch && !landscape);
+}
+
+async function requestMobileLandscapeMode() {
+  if (!isTouchViewport()) {
+    return;
+  }
+
+  try {
+    if (!document.fullscreenElement && rootEl.requestFullscreen) {
+      await rootEl.requestFullscreen();
+    }
+  } catch (error) {
+    console.info('Fullscreen request skipped:', error);
+  }
+
+  try {
+    await screen.orientation.lock('landscape');
+  } catch (error) {
+    console.info('Landscape lock skipped:', error);
+  }
+
+  setTimeout(resizeCanvasForViewport, 160);
 }
 
 function tick(now) {
@@ -924,6 +960,19 @@ function keyToVector() {
 }
 
 function updateJoystickVector(event) {
+  updateJoystickVectorFromPoint(event.clientX, event.clientY);
+}
+
+function updateJoystickVectorFromTouch(event) {
+  const touch = event.touches[0] ?? event.changedTouches[0];
+  if (!touch) {
+    return;
+  }
+
+  updateJoystickVectorFromPoint(touch.clientX, touch.clientY);
+}
+
+function updateJoystickVectorFromPoint(clientX, clientY) {
   if (!joystickBase) {
     return;
   }
@@ -932,8 +981,8 @@ function updateJoystickVector(event) {
   const centerX = rect.left + rect.width / 2;
   const centerY = rect.top + rect.height / 2;
   const maxDistance = rect.width * 0.34;
-  const dx = event.clientX - centerX;
-  const dy = event.clientY - centerY;
+  const dx = clientX - centerX;
+  const dy = clientY - centerY;
   const length = Math.hypot(dx, dy);
   const scale = length > maxDistance ? maxDistance / length : 1;
   const stickX = dx * scale;
@@ -1002,6 +1051,23 @@ if (joystickBase) {
   });
 
   joystickBase.addEventListener('pointercancel', clearJoystickVector);
+
+  joystickBase.addEventListener('touchstart', (event) => {
+    event.preventDefault();
+    updateJoystickVectorFromTouch(event);
+  }, { passive: false });
+
+  joystickBase.addEventListener('touchmove', (event) => {
+    event.preventDefault();
+    updateJoystickVectorFromTouch(event);
+  }, { passive: false });
+
+  joystickBase.addEventListener('touchend', (event) => {
+    event.preventDefault();
+    clearJoystickVector();
+  }, { passive: false });
+
+  joystickBase.addEventListener('touchcancel', clearJoystickVector);
 }
 
 window.addEventListener('resize', resizeCanvasForViewport);

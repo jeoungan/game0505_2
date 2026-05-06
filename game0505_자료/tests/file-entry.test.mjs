@@ -66,10 +66,16 @@ test('mobile landscape mode shows only the playable field with touch controls', 
   assert.match(html, /id="joystickBase"/);
   assert.match(html, /id="orientationOverlay"/);
   assert.match(html, /\uD734\uB300\uD3F0\uC744 \uAC00\uB85C\uB85C \uB3CC\uB824\uC8FC\uC138\uC694/);
-  assert.match(html, /@media \(hover: none\) and \(pointer: coarse\) and \(orientation: landscape\)/);
+  assert.match(html, /\.touch-device\.landscape-runtime/);
+  assert.match(html, /\.touch-device\.portrait-runtime \.orientation-overlay/);
   assert.match(html, /\.topbar,\s*\.status-row\s*\{\s*display: none;/);
+  assert.match(bundle, /function isTouchViewport/);
   assert.match(bundle, /function resizeCanvasForViewport/);
   assert.match(bundle, /function updateJoystickVector/);
+  assert.match(bundle, /touchstart/);
+  assert.match(bundle, /touchmove/);
+  assert.match(bundle, /requestFullscreen/);
+  assert.match(bundle, /screen\.orientation\.lock/);
   assert.match(bundle, /touchVector/);
 });
 
