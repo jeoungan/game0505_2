@@ -80,15 +80,19 @@ let scorePromptShown = false;
 let touchVector = { x: 0, y: 0 };
 const pressedKeys = new Set();
 
-function resetGame() {
+function resetGame({ showBriefing = false } = {}) {
   state = createGameState();
   lastTime = performance.now();
   playerFrame = 0;
-  gameStarted = false;
+  gameStarted = !showBriefing;
   scorePromptShown = false;
   pressedKeys.clear();
   clearJoystickVector();
-  showStartOverlay();
+  if (showBriefing) {
+    showStartOverlay();
+  } else {
+    hideStartOverlay();
+  }
   hideScoreOverlay();
   updateHud();
   render();
@@ -98,12 +102,16 @@ function startGame() {
   gameStarted = true;
   scorePromptShown = false;
   lastTime = performance.now();
-  startOverlay.classList.add('hidden');
+  hideStartOverlay();
   hideScoreOverlay();
 }
 
 function showStartOverlay() {
   startOverlay.classList.remove('hidden');
+}
+
+function hideStartOverlay() {
+  startOverlay.classList.add('hidden');
 }
 
 function hideScoreOverlay() {
@@ -505,7 +513,7 @@ window.addEventListener('resize', resizeCanvasForViewport);
 window.addEventListener('orientationchange', resizeCanvasForViewport);
 
 startButton.addEventListener('click', startGame);
-resetButton.addEventListener('click', resetGame);
+resetButton.addEventListener('click', () => resetGame());
 saveRecordButton.addEventListener('click', showNameInput);
 skipRecordButton.addEventListener('click', skipRecord);
 confirmRecordButton.addEventListener('click', confirmRecord);

@@ -72,3 +72,12 @@ test('mobile landscape mode shows only the playable field with touch controls', 
   assert.match(bundle, /function updateJoystickVector/);
   assert.match(bundle, /touchVector/);
 });
+
+test('reset button restarts play without showing the first briefing again', async () => {
+  const bundle = await readFile(new URL('../game-standalone.js', import.meta.url), 'utf8');
+
+  assert.match(bundle, /function resetGame\(\{ showBriefing = false \} = \{\}\)/);
+  assert.match(bundle, /if \(showBriefing\) \{/);
+  assert.match(bundle, /hideStartOverlay\(\);/);
+  assert.match(bundle, /resetButton\.addEventListener\('click', \(\) => resetGame\(\)\)/);
+});
