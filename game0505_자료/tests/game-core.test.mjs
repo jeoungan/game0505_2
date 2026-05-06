@@ -117,6 +117,33 @@ test('chaser monsters are faster than guard monsters and close to player speed',
   assert.equal(CHASER_MONSTER_SPEED_PER_MS >= 0.12, true);
 });
 
+test('monster chase speed starts slower and ramps up by survived days', () => {
+  const early = createGameState();
+  early.player.x = 12 * TILE_SIZE;
+  early.player.y = 5 * TILE_SIZE;
+  early.monsters = [
+    { x: 5 * TILE_SIZE, y: 5 * TILE_SIZE, role: 'chaser', dir: { x: 1, y: 0 }, stepTimer: 0 },
+  ];
+
+  updateMonsters(early, 1000);
+  const earlyDelta = early.monsters[0].x - 5 * TILE_SIZE;
+
+  const later = createGameState();
+  later.daysSurvived = 4;
+  later.player.x = 12 * TILE_SIZE;
+  later.player.y = 5 * TILE_SIZE;
+  later.monsters = [
+    { x: 5 * TILE_SIZE, y: 5 * TILE_SIZE, role: 'chaser', dir: { x: 1, y: 0 }, stepTimer: 0 },
+  ];
+
+  updateMonsters(later, 1000);
+  const laterDelta = later.monsters[0].x - 5 * TILE_SIZE;
+
+  assert.equal(earlyDelta < CHASER_MONSTER_SPEED_PER_MS * 1000, true);
+  assert.equal(laterDelta > earlyDelta, true);
+  assert.equal(laterDelta <= CHASER_MONSTER_SPEED_PER_MS * 1000, true);
+});
+
 test('field starts with sixteen monsters split into chasers and guards', () => {
   const state = createGameState();
 
@@ -202,6 +229,7 @@ test('monsters step toward the player like a slow chase', () => {
 
 test('monsters can chase diagonally with smooth pixel movement', () => {
   const state = createGameState();
+  state.daysSurvived = 4;
   state.player.x = 10 * TILE_SIZE;
   state.player.y = 10 * TILE_SIZE;
   state.monsters = [

@@ -59,7 +59,7 @@ test('game over flow can save a named survival record in file preview', async ()
   assert.match(bundle, /scoreResetButton\.addEventListener\('click', \(\) => resetGame\(\)\)/);
 });
 
-test('mobile landscape mode shows only the playable field with touch controls', async () => {
+test('mobile landscape and portrait modes show the playable field with touch controls', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const bundle = await readFile(new URL('../game-standalone.js', import.meta.url), 'utf8');
 
@@ -69,9 +69,9 @@ test('mobile landscape mode shows only the playable field with touch controls', 
   assert.match(html, /id="mobileResetButton"/);
   assert.match(html, /class="mobile-reset"/);
   assert.match(html, /id="orientationOverlay"/);
-  assert.match(html, /\uD734\uB300\uD3F0\uC744 \uAC00\uB85C\uB85C \uB3CC\uB824\uC8FC\uC138\uC694/);
   assert.match(html, /\.touch-device\.landscape-runtime/);
-  assert.match(html, /\.touch-device\.portrait-runtime \.orientation-overlay/);
+  assert.match(html, /\.touch-device\.portrait-runtime canvas/);
+  assert.doesNotMatch(html, /\.touch-device\.portrait-runtime \.orientation-overlay\s*\{\s*display:\s*grid;/);
   assert.match(html, /\.topbar,\s*\.status-row\s*\{\s*display: none;/);
   assert.match(bundle, /function isTouchViewport/);
   assert.match(bundle, /function resizeCanvasForViewport/);
@@ -79,9 +79,18 @@ test('mobile landscape mode shows only the playable field with touch controls', 
   assert.match(bundle, /touchstart/);
   assert.match(bundle, /touchmove/);
   assert.match(bundle, /requestFullscreen/);
-  assert.match(bundle, /screen\.orientation\.lock/);
+  assert.doesNotMatch(bundle, /screen\.orientation\.lock/);
   assert.match(bundle, /mobileResetButton\.addEventListener\('click', \(\) => resetGame\(\)\)/);
   assert.match(bundle, /touchVector/);
+});
+
+test('item pickups render a glow effect around the real item sprites', async () => {
+  const bundle = await readFile(new URL('../game-standalone.js', import.meta.url), 'utf8');
+
+  assert.match(bundle, /function drawItemGlow/);
+  assert.match(bundle, /createRadialGradient/);
+  assert.match(bundle, /ctx\.arc/);
+  assert.match(bundle, /drawItemGlow\(pickup/);
 });
 
 test('reset button restarts play without showing the first briefing again', async () => {

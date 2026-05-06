@@ -306,7 +306,8 @@
       overflow: hidden;
     }
 
-    html.touch-device.landscape-runtime canvas {
+    html.touch-device.landscape-runtime canvas,
+    html.touch-device.portrait-runtime canvas {
       width: 100vw;
       height: 100dvh;
       border: 0;
@@ -353,10 +354,6 @@
 
     html.touch-device .mobile-reset {
       display: block;
-    }
-
-    html.touch-device.portrait-runtime .orientation-overlay {
-      display: grid;
     }
 
     @media (hover: none) and (pointer: coarse) and (orientation: landscape) {
@@ -449,8 +446,49 @@
         overflow: hidden;
       }
 
+      .screen-panel {
+        width: 100vw;
+        height: 100dvh;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+        background: #050706;
+      }
+
+      .topbar,
+      .status-row {
+        display: none;
+      }
+
+      .stage {
+        width: 100vw;
+        height: 100dvh;
+        max-width: none;
+        margin: 0;
+        overflow: hidden;
+      }
+
+      canvas {
+        width: 100vw;
+        height: 100dvh;
+        border: 0;
+        aspect-ratio: auto;
+      }
+
+      .mobile-controls {
+        display: block;
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      .mobile-reset {
+        display: block;
+      }
+
       .orientation-overlay {
-        display: grid;
+        display: none;
       }
     }
   </style>

@@ -13,6 +13,8 @@ const ITEM_RESPAWN_PLAYER_SAFE_RADIUS = TILE_SIZE * 4;
 const ITEM_RESPAWN_MONSTER_SAFE_RADIUS = TILE_SIZE * 2;
 const MONSTER_SPEED_PER_MS = 0.08;
 const CHASER_MONSTER_SPEED_PER_MS = 0.12;
+const MONSTER_START_SPEED_SCALE = 0.7;
+const MONSTER_DAILY_SPEED_SCALE = 0.075;
 const MONSTER_RESPAWN_PLAYER_SAFE_RADIUS = TILE_SIZE * 7;
 const MONSTER_RESPAWN_MONSTER_SAFE_RADIUS = TILE_SIZE * 2;
 const GUARD_MONSTER_AGGRO_RADIUS = TILE_SIZE * 8;
@@ -165,7 +167,7 @@ function updateMonsters(state, elapsedMs) {
 
   for (const monster of state.monsters) {
     const target = chooseMonsterTarget(monster, state.player);
-    const speed = monsterSpeed(monster);
+    const speed = monsterSpeed(monster, state.daysSurvived);
     const nextDir = chooseChaseDirection(monster, target, monster.dir, speed);
     const distanceThisFrame = elapsedMs * speed;
     const nextX = monster.x + nextDir.x * distanceThisFrame;
@@ -440,8 +442,10 @@ function setTile(map, x, y, tile) {
   map[y][x] = tile;
 }
 
-function monsterSpeed(monster) {
-  return monster.role === 'chaser' ? CHASER_MONSTER_SPEED_PER_MS : MONSTER_SPEED_PER_MS;
+function monsterSpeed(monster, daysSurvived = 0) {
+  const baseSpeed = monster.role === 'chaser' ? CHASER_MONSTER_SPEED_PER_MS : MONSTER_SPEED_PER_MS;
+  const speedScale = Math.min(1, MONSTER_START_SPEED_SCALE + daysSurvived * MONSTER_DAILY_SPEED_SCALE);
+  return baseSpeed * speedScale;
 }
 
 function chooseChaseDirection(monster, player, fallback, speed = monsterSpeed(monster)) {
@@ -719,11 +723,16 @@ function drawItems() {
 
 function drawItem(pickup) {
   const bob = Math.sin((performance.now() / 320) + pickup.x) * 2;
+  const pulse = (Math.sin((performance.now() / 220) + pickup.y) + 1) / 2;
   const drawSize = pickup.type === 'water'
     ? { w: 22, h: 36 }
     : { w: 34, h: 26 };
   const x = pickup.x + TILE_SIZE / 2 - drawSize.w / 2;
   const y = pickup.y + TILE_SIZE / 2 - drawSize.h / 2 + bob;
+  const centerX = pickup.x + TILE_SIZE / 2;
+  const centerY = pickup.y + TILE_SIZE / 2 + bob;
+
+  drawItemGlow(pickup, centerX, centerY, pulse);
 
   ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
   ctx.beginPath();
@@ -748,6 +757,31 @@ function drawItem(pickup) {
   ctx.fillRect(x + 2, y + 4, 30, 18);
   ctx.fillStyle = '#29a5a3';
   ctx.fillRect(x + 4, y + 10, 26, 8);
+}
+
+function drawItemGlow(pickup, centerX, centerY, pulse) {
+  const glowColor = pickup.type === 'water'
+    ? 'rgba(121, 201, 255, '
+    : 'rgba(97, 210, 182, ';
+  const radius = 20 + pulse * 5;
+  const gradient = ctx.createRadialGradient(centerX, centerY, 4, centerX, centerY, radius);
+
+  gradient.addColorStop(0, `${glowColor}0.38)`);
+  gradient.addColorStop(0.55, `${glowColor}0.2)`);
+  gradient.addColorStop(1, `${glowColor}0)`);
+
+  ctx.save();
+  ctx.fillStyle = gradient;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.strokeStyle = `${glowColor}${0.36 + pulse * 0.24})`;
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.arc(centerX, centerY, radius * 0.72, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.restore();
 }
 
 function drawPlayer() {
@@ -862,9 +896,9 @@ function clamp(value, min, max) {
 
 function resizeCanvasForViewport() {
   syncViewportModeClasses();
-  const mobileLandscape = isTouchViewport() && window.innerWidth >= window.innerHeight;
-  const nextWidth = mobileLandscape ? Math.floor(window.innerWidth) : DEFAULT_CANVAS_WIDTH;
-  const nextHeight = mobileLandscape ? Math.floor(window.innerHeight) : DEFAULT_CANVAS_HEIGHT;
+  const mobile = isTouchViewport();
+  const nextWidth = mobile ? Math.floor(window.innerWidth) : DEFAULT_CANVAS_WIDTH;
+  const nextHeight = mobile ? Math.floor(window.innerHeight) : DEFAULT_CANVAS_HEIGHT;
 
   if (canvas.width === nextWidth && canvas.height === nextHeight) {
     return;
@@ -902,12 +936,6 @@ async function requestMobileLandscapeMode() {
     }
   } catch (error) {
     console.info('Fullscreen request skipped:', error);
-  }
-
-  try {
-    await screen.orientation.lock('landscape');
-  } catch (error) {
-    console.info('Landscape lock skipped:', error);
   }
 
   setTimeout(resizeCanvasForViewport, 160);

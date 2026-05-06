@@ -10,6 +10,8 @@ export const ITEM_RESPAWN_PLAYER_SAFE_RADIUS = TILE_SIZE * 4;
 export const ITEM_RESPAWN_MONSTER_SAFE_RADIUS = TILE_SIZE * 2;
 export const MONSTER_SPEED_PER_MS = 0.08;
 export const CHASER_MONSTER_SPEED_PER_MS = 0.12;
+export const MONSTER_START_SPEED_SCALE = 0.7;
+export const MONSTER_DAILY_SPEED_SCALE = 0.075;
 export const MONSTER_RESPAWN_PLAYER_SAFE_RADIUS = TILE_SIZE * 7;
 export const MONSTER_RESPAWN_MONSTER_SAFE_RADIUS = TILE_SIZE * 2;
 export const GUARD_MONSTER_AGGRO_RADIUS = TILE_SIZE * 8;
@@ -162,7 +164,7 @@ export function updateMonsters(state, elapsedMs) {
 
   for (const monster of state.monsters) {
     const target = chooseMonsterTarget(monster, state.player);
-    const speed = monsterSpeed(monster);
+    const speed = monsterSpeed(monster, state.daysSurvived);
     const nextDir = chooseChaseDirection(monster, target, monster.dir, speed);
     const distanceThisFrame = elapsedMs * speed;
     const nextX = monster.x + nextDir.x * distanceThisFrame;
@@ -437,8 +439,10 @@ function setTile(map, x, y, tile) {
   map[y][x] = tile;
 }
 
-function monsterSpeed(monster) {
-  return monster.role === 'chaser' ? CHASER_MONSTER_SPEED_PER_MS : MONSTER_SPEED_PER_MS;
+function monsterSpeed(monster, daysSurvived = 0) {
+  const baseSpeed = monster.role === 'chaser' ? CHASER_MONSTER_SPEED_PER_MS : MONSTER_SPEED_PER_MS;
+  const speedScale = Math.min(1, MONSTER_START_SPEED_SCALE + daysSurvived * MONSTER_DAILY_SPEED_SCALE);
+  return baseSpeed * speedScale;
 }
 
 function chooseChaseDirection(monster, player, fallback, speed = monsterSpeed(monster)) {
