@@ -52,9 +52,11 @@ test('game over flow can save a named survival record in file preview', async ()
   const bundle = await readFile(new URL('../game-standalone.js', import.meta.url), 'utf8');
 
   assert.match(html, /\uAE30\uB85D\uC744 \uC800\uC7A5\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C\?/);
+  assert.match(html, /id="scoreResetButton"/);
   assert.match(html, /id="playerNameInput"/);
   assert.match(bundle, /localStorage/);
   assert.match(bundle, /campusSurvivalRecords/);
+  assert.match(bundle, /scoreResetButton\.addEventListener\('click', \(\) => resetGame\(\)\)/);
 });
 
 test('mobile landscape mode shows only the playable field with touch controls', async () => {

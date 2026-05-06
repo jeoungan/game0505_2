@@ -29,6 +29,7 @@ const scoreSummaryEl = document.querySelector('#scoreSummary');
 const scoreActions = document.querySelector('#scoreActions');
 const saveRecordButton = document.querySelector('#saveRecordButton');
 const skipRecordButton = document.querySelector('#skipRecordButton');
+const scoreResetButton = document.querySelector('#scoreResetButton');
 const nameRow = document.querySelector('#nameRow');
 const playerNameInput = document.querySelector('#playerNameInput');
 const confirmRecordButton = document.querySelector('#confirmRecordButton');
@@ -584,6 +585,7 @@ resetButton.addEventListener('click', () => resetGame());
 mobileResetButton.addEventListener('click', () => resetGame());
 saveRecordButton.addEventListener('click', showNameInput);
 skipRecordButton.addEventListener('click', skipRecord);
+scoreResetButton.addEventListener('click', () => resetGame());
 confirmRecordButton.addEventListener('click', confirmRecord);
 playerNameInput.addEventListener('keydown', (event) => {
   if (event.key === 'Enter') {

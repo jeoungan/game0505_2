@@ -126,14 +126,16 @@
     }
 
     .modal-actions,
-    .name-row {
+    .name-row,
+    .record-reset-actions {
       display: flex;
       gap: 10px;
       align-items: center;
       flex-wrap: wrap;
     }
 
-    .name-row {
+    .name-row,
+    .record-reset-actions {
       margin-top: 12px;
     }
 
@@ -491,6 +493,9 @@
             <button id="confirmRecordButton" type="button">확인</button>
           </div>
           <p id="recordMessage" class="hidden"></p>
+          <div class="record-reset-actions">
+            <button id="scoreResetButton" type="button">다시 시작</button>
+          </div>
         </div>
       </div>
       <div class="mobile-controls">
