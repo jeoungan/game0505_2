@@ -606,7 +606,7 @@ function startGame() {
   lastTime = performance.now();
   hideStartOverlay();
   hideScoreOverlay();
-  requestMobileLandscapeMode();
+  refreshMobileViewport();
 }
 
 function showStartOverlay() {
@@ -925,17 +925,9 @@ function syncViewportModeClasses() {
   rootEl.classList.toggle('portrait-runtime', touch && !landscape);
 }
 
-async function requestMobileLandscapeMode() {
+function refreshMobileViewport() {
   if (!isTouchViewport()) {
     return;
-  }
-
-  try {
-    if (!document.fullscreenElement && rootEl.requestFullscreen) {
-      await rootEl.requestFullscreen();
-    }
-  } catch (error) {
-    console.info('Fullscreen request skipped:', error);
   }
 
   setTimeout(resizeCanvasForViewport, 160);

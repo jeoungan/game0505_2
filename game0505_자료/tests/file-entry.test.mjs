@@ -45,6 +45,8 @@ test('index opens with a start briefing before play begins', async () => {
     html,
     /\uB2F9\uC2E0\uC740 \uBAAC\uC2A4\uD130\uAC00 \uB098\uD0C0\uB098\uB294 \uD559\uAD50\uC5D0 \uAC07\uD614\uC2B5\uB2C8\uB2E4\./,
   );
+  assert.match(html, /\uAC00\uB85C \uD654\uBA74 \uD50C\uB808\uC774\uB97C \uAD8C\uC7A5\uD558\uC9C0\uB9CC/);
+  assert.match(html, /\uC138\uB85C \uD654\uBA74\uC5D0\uC11C\uB3C4 \uBC14\uB85C \uD50C\uB808\uC774\uD560 \uC218 \uC788\uC2B5\uB2C8\uB2E4/);
 });
 
 test('game over flow can save a named survival record in file preview', async () => {
@@ -78,7 +80,9 @@ test('mobile landscape and portrait modes show the playable field with touch con
   assert.match(bundle, /function updateJoystickVector/);
   assert.match(bundle, /touchstart/);
   assert.match(bundle, /touchmove/);
-  assert.match(bundle, /requestFullscreen/);
+  assert.doesNotMatch(bundle, /requestFullscreen/);
+  assert.doesNotMatch(bundle, /fullscreenElement/);
+  assert.doesNotMatch(bundle, /requestMobileLandscapeMode/);
   assert.doesNotMatch(bundle, /screen\.orientation\.lock/);
   assert.match(bundle, /mobileResetButton\.addEventListener\('click', \(\) => resetGame\(\)\)/);
   assert.match(bundle, /touchVector/);
