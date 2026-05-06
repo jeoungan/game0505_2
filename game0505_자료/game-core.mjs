@@ -62,13 +62,13 @@ export function createGameState() {
     monsterCycle: 0,
     items: INITIAL_ITEMS.map((pickup) => ({ ...pickup })),
     itemCycle: 0,
-    inventory: { water: 0, tuna: 0 },
+    inventory: { water: DAILY_WATER_COST, tuna: DAILY_FOOD_COST },
     survivedMs: 0,
     daysSurvived: 0,
     cycleRemainingMs: SURVIVAL_CYCLE_MS,
     gameOver: false,
     gameOverReason: '',
-    message: '\uBB3C\uACFC \uC2DD\uB7C9\uC744 \uC8FC\uC6B0\uBA70 \uD558\uB8E8\uB9C8\uB2E4 \uD558\uB098\uC529 \uC18C\uBE44\uD574 \uC0B4\uC544\uB0A8\uC73C\uC138\uC694.',
+    message: '\uD558\uB8E8\uCE58 \uBB3C\uACFC \uC2DD\uB7C9\uC744 \uAC00\uC9C0\uACE0 \uC2DC\uC791\uD569\uB2C8\uB2E4. \uB9E4\uC77C 3\uAC1C\uC529 \uBAA8\uC544 \uC0B4\uC544\uB0A8\uC73C\uC138\uC694.',
   };
 }
 

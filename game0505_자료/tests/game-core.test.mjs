@@ -53,14 +53,14 @@ test('field starts with four water and four food items', () => {
   assert.equal(state.items.filter((pickup) => pickup.type === 'tuna').length, FIELD_ITEMS_PER_TYPE);
 });
 
-test('player starts with no stored water or food', () => {
+test('player starts with one day of water and food so the first day can advance', () => {
   const state = createGameState();
 
-  assert.equal(state.inventory.water, 0);
-  assert.equal(state.inventory.tuna, 0);
+  assert.equal(state.inventory.water, DAILY_WATER_COST);
+  assert.equal(state.inventory.tuna, DAILY_FOOD_COST);
 });
 
-test('collecting every starting item gives four water and four food', () => {
+test('collecting every starting item adds four water and four food to the starter supplies', () => {
   const state = createGameState();
 
   for (const pickup of state.items) {
@@ -69,8 +69,8 @@ test('collecting every starting item gives four water and four food', () => {
     collectItems(state);
   }
 
-  assert.equal(state.inventory.water, FIELD_ITEMS_PER_TYPE);
-  assert.equal(state.inventory.tuna, FIELD_ITEMS_PER_TYPE);
+  assert.equal(state.inventory.water, DAILY_WATER_COST + FIELD_ITEMS_PER_TYPE);
+  assert.equal(state.inventory.tuna, DAILY_FOOD_COST + FIELD_ITEMS_PER_TYPE);
 });
 
 test('survival cycle consumes three water and three food when the day ends', () => {
@@ -168,6 +168,20 @@ test('each survived day adds half of the initial monster count', () => {
   updateSurvivalTimer(state, SURVIVAL_CYCLE_MS, fixedRandom);
 
   assert.equal(state.monsters.length, initialMonsterCount + initialMonsterCount);
+});
+
+test('the first day can pass and add monsters even before collecting pickups', () => {
+  const state = createGameState();
+  const initialMonsterCount = state.monsters.length;
+  const fixedRandom = repeatingRandom([0.15, 0.15, 0.85, 0.2, 0.4, 0.85, 0.9, 0.9]);
+
+  updateSurvivalTimer(state, SURVIVAL_CYCLE_MS, fixedRandom);
+
+  assert.equal(state.gameOver, false);
+  assert.equal(state.daysSurvived, 1);
+  assert.equal(state.inventory.water, 0);
+  assert.equal(state.inventory.tuna, 0);
+  assert.equal(state.monsters.length, initialMonsterCount + initialMonsterCount / 2);
 });
 
 test('guard monsters chase nearby players but return home when player is far', () => {
