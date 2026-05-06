@@ -530,6 +530,7 @@ const confirmRecordButton = document.querySelector('#confirmRecordButton');
 const recordMessageEl = document.querySelector('#recordMessage');
 const joystickBase = document.querySelector('#joystickBase');
 const joystickStick = document.querySelector('#joystickStick');
+const mobileResetButton = document.querySelector('#mobileResetButton');
 const PLAYER_SPEED_PER_MS = 0.14;
 const RECORD_STORAGE_KEY = 'campusSurvivalRecords';
 const DEFAULT_CANVAS_WIDTH = 640;
@@ -1075,6 +1076,7 @@ window.addEventListener('orientationchange', resizeCanvasForViewport);
 
 startButton.addEventListener('click', startGame);
 resetButton.addEventListener('click', () => resetGame());
+mobileResetButton.addEventListener('click', () => resetGame());
 saveRecordButton.addEventListener('click', showNameInput);
 skipRecordButton.addEventListener('click', skipRecord);
 confirmRecordButton.addEventListener('click', confirmRecord);

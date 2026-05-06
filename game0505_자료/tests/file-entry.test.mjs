@@ -64,6 +64,8 @@ test('mobile landscape mode shows only the playable field with touch controls', 
   assert.match(html, /name="viewport" content="width=device-width, initial-scale=1\.0, viewport-fit=cover"/);
   assert.match(html, /class="mobile-controls"/);
   assert.match(html, /id="joystickBase"/);
+  assert.match(html, /id="mobileResetButton"/);
+  assert.match(html, /class="mobile-reset"/);
   assert.match(html, /id="orientationOverlay"/);
   assert.match(html, /\uD734\uB300\uD3F0\uC744 \uAC00\uB85C\uB85C \uB3CC\uB824\uC8FC\uC138\uC694/);
   assert.match(html, /\.touch-device\.landscape-runtime/);
@@ -76,6 +78,7 @@ test('mobile landscape mode shows only the playable field with touch controls', 
   assert.match(bundle, /touchmove/);
   assert.match(bundle, /requestFullscreen/);
   assert.match(bundle, /screen\.orientation\.lock/);
+  assert.match(bundle, /mobileResetButton\.addEventListener\('click', \(\) => resetGame\(\)\)/);
   assert.match(bundle, /touchVector/);
 });
 

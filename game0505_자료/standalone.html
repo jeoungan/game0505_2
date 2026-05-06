@@ -181,6 +181,18 @@
       pointer-events: none;
     }
 
+    .mobile-reset {
+      display: none;
+      position: absolute;
+      right: max(12px, env(safe-area-inset-right));
+      bottom: max(18px, env(safe-area-inset-bottom));
+      z-index: 2;
+      min-width: 92px;
+      min-height: 44px;
+      padding: 8px 12px;
+      pointer-events: auto;
+    }
+
     .orientation-overlay {
       display: none;
       position: fixed;
@@ -337,6 +349,10 @@
       z-index: 2;
     }
 
+    html.touch-device .mobile-reset {
+      display: block;
+    }
+
     html.touch-device.portrait-runtime .orientation-overlay {
       display: grid;
     }
@@ -477,10 +493,11 @@
           <p id="recordMessage" class="hidden"></p>
         </div>
       </div>
-      <div class="mobile-controls" aria-hidden="true">
+      <div class="mobile-controls">
         <div class="joystick-base" id="joystickBase">
           <div class="joystick-stick" id="joystickStick"></div>
         </div>
+        <button class="mobile-reset" id="mobileResetButton" type="button">다시 시작</button>
       </div>
     </div>
 
